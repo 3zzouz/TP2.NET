@@ -55,8 +55,9 @@ namespace TP2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Mo")] Customer customer)
+        public async Task<IActionResult> Create([Bind("Id,Name,MoviesList")] Customer customer)
         {
+            Console.WriteLine(customer.ToJson());
             if (ModelState.IsValid)
             {
                 _context.Add(customer);
