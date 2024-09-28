@@ -18,16 +18,8 @@ public class ApplicationdbContext : DbContext
             .HasMany(c => c.Movies)
             .WithMany(m => m.Customers)
             .UsingEntity(j => j.ToTable("CustomerMovie"));
-
-        modelBuilder.Entity<Genre>()
-            .HasMany(g => g.Movies)
-            .WithOne(m => m.Genre)
-            .HasForeignKey(m => m.GenreId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<Movie>()
-            .HasOne(m => m.Genre)
-            .WithMany(g => g.Movies)
-            .HasForeignKey(m => m.GenreId);
+        modelBuilder.Entity<BaseClass>()
+            .HasIndex(b => b.Name)
+            .IsUnique(true);
     }
 }

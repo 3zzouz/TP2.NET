@@ -1,4 +1,4 @@
-@model TP2.Models.GenreViewModel
+@model TP2.Models.Genre
 
 @{
     ViewData["Title"] = "Edit";
@@ -18,10 +18,6 @@
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SelectedMovieIds" class="control-label">Movies</label>
-                <select asp-for="SelectedMovieIds" class="form-control" asp-items="Model.Movies" multiple="multiple"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

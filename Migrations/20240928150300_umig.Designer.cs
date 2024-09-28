@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TP2.Models;
@@ -11,9 +12,11 @@ using TP2.Models;
 namespace TP2.Migrations
 {
     [DbContext(typeof(ApplicationdbContext))]
-    partial class ApplicationdbContextModelSnapshot : ModelSnapshot
+    [Migration("20240928150300_umig")]
+    partial class umig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TP2.Models;
@@ -11,9 +12,11 @@ using TP2.Models;
 namespace TP2.Migrations
 {
     [DbContext(typeof(ApplicationdbContext))]
-    partial class ApplicationdbContextModelSnapshot : ModelSnapshot
+    [Migration("20240928134749_audit-mig")]
+    partial class auditmig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,8 +48,16 @@ namespace TP2.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Name")
                         .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -59,8 +70,16 @@ namespace TP2.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Name")
                         .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -75,11 +94,19 @@ namespace TP2.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<Guid>("GenreId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -108,7 +135,7 @@ namespace TP2.Migrations
                     b.HasOne("TP2.Models.Genre", "Genre")
                         .WithMany("Movies")
                         .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Genre");

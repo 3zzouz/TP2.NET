@@ -21,7 +21,7 @@ namespace TP2.Controllers
         // GET: Genre
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Genres.Include(m => m.Movies).ToListAsync());
+            return View(await _context.Genres.ToListAsync());
         }
 
         // GET: Genre/Details/5
@@ -33,7 +33,6 @@ namespace TP2.Controllers
             }
 
             var genre = await _context.Genres
-                .Include(m=>m.Movies)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (genre == null)
             {
@@ -44,50 +43,26 @@ namespace TP2.Controllers
         }
 
         // GET: Genre/Create
-        // GET: Genre/Create
         public IActionResult Create()
         {
-            var viewModel = new GenreViewModel
-            {
-                Movies = _context.Movies.Select(m => new SelectListItem
-                {
-                    Value = m.Id.ToString(),
-                    Text = m.Name
-                }).ToList()
-            };
-            return View(viewModel);
+            return View();
         }
 
         // POST: Genre/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(GenreViewModel viewModel)
+        public async Task<IActionResult> Create([Bind("Id,Name")] Genre genre)
         {
             if (ModelState.IsValid)
             {
-                var genre = new Genre
-                {
-                    Name = viewModel.Name,
-                    Movies = _context.Movies.Where(m => viewModel.SelectedMovieIds.Contains(m.Id)).ToList()
-                };
+                genre.Id = Guid.NewGuid();
                 _context.Add(genre);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-
-            foreach (var state in ModelState)
-            {
-                foreach (var error in state.Value.Errors)
-                {
-                    Console.WriteLine($"Property: {state.Key}, Error: {error.ErrorMessage}");
-                }
-            }
-            viewModel.Movies = _context.Movies.Select(m => new SelectListItem
-            {
-                Value = m.Id.ToString(),
-                Text = m.Name
-            }).ToList();
-            return View(viewModel);
+            return View(genre);
         }
 
         // GET: Genre/Edit/5
@@ -98,47 +73,28 @@ namespace TP2.Controllers
                 return NotFound();
             }
 
-            var genre = await _context.Genres.Include(g => g.Movies).FirstOrDefaultAsync(g => g.Id == id);
+            var genre = await _context.Genres.FindAsync(id);
             if (genre == null)
             {
                 return NotFound();
             }
-
-            var viewModel = new GenreViewModel
-            {
-                Id = genre.Id,
-                Name = genre.Name,
-                SelectedMovieIds = genre.Movies.Select(m => m.Id).ToList(),
-                Movies = _context.Movies.Select(m => new SelectListItem
-                {
-                    Value = m.Id.ToString(),
-                    Text = m.Name
-                }).ToList()
-            };
-            return View(viewModel);
+            return View(genre);
         }
 
         // POST: Genre/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, GenreViewModel viewModel)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name")] Genre genre)
         {
-            if (id != viewModel.Id)
+            if (id != genre.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                var genre = await _context.Genres.Include(g => g.Movies).FirstOrDefaultAsync(g => g.Id == id);
-                if (genre == null)
-                {
-                    return NotFound();
-                }
-
-                genre.Name = viewModel.Name;
-                genre.Movies = _context.Movies.Where(m => viewModel.SelectedMovieIds.Contains(m.Id)).ToList();
-
                 try
                 {
                     _context.Update(genre);
@@ -155,18 +111,10 @@ namespace TP2.Controllers
                         throw;
                     }
                 }
-
                 return RedirectToAction(nameof(Index));
             }
-
-            viewModel.Movies = _context.Movies.Select(m => new SelectListItem
-            {
-                Value = m.Id.ToString(),
-                Text = m.Name
-            }).ToList();
-            return View(viewModel);
+            return View(genre);
         }
-        
 
         // GET: Genre/Delete/5
         public async Task<IActionResult> Delete(Guid? id)

@@ -50,4 +50,12 @@
       <_ContentIncludedByDefault Remove="Views\Customer\Index.cshtml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Views\Genre\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Genre\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Genre\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Genre\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Genre\Index.cshtml" />
+    </ItemGroup>
+
 </Project>

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol;
 using TP2.Models;
 
 namespace TP2.Controllers
@@ -57,24 +56,22 @@ namespace TP2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,GenreId")] Movie movie)
+        public async Task<IActionResult> Create([Bind("Id,GenreId,Name")] Movie movie)
         {
-            Console.WriteLine(movie.ToJson());
             if (ModelState.IsValid)
             {
                 _context.Add(movie);
-                Console.WriteLine("created movie");
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             foreach (var state in ModelState)
             {
-                foreach (var error in state.Value.Errors)
+                foreach (var err in state.Value.Errors)
                 {
-                    Console.WriteLine($"Property: {state.Key}, Error: {error.ErrorMessage}");
+                    Console.WriteLine(err.ErrorMessage);
                 }
             }
-
             ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "Id", movie.GenreId);
             return View(movie);
         }
@@ -92,7 +89,6 @@ namespace TP2.Controllers
             {
                 return NotFound();
             }
-
             ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "Id", movie.GenreId);
             return View(movie);
         }
@@ -102,7 +98,7 @@ namespace TP2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,GenreId")] Movie movie)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,GenreId,Name")] Movie movie)
         {
             if (id != movie.Id)
             {
@@ -127,10 +123,8 @@ namespace TP2.Controllers
                         throw;
                     }
                 }
-
                 return RedirectToAction(nameof(Index));
             }
-
             ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "Id", movie.GenreId);
             return View(movie);
         }

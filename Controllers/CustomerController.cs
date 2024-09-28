@@ -55,9 +55,8 @@ namespace TP2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,MoviesList")] Customer customer)
+        public async Task<IActionResult> Create([Bind("Id,Name")] Customer customer)
         {
-            Console.WriteLine(customer.ToJson());
             if (ModelState.IsValid)
             {
                 _context.Add(customer);
@@ -81,8 +80,8 @@ namespace TP2.Controllers
             {
                 return NotFound();
             }
-            customer.MoviesList = customer.Movies?.Select(m=>m.Id).ToList();
-            FetchMoviesListToSelect(customer.MoviesList);
+            customer.MoviesListId = customer.Movies?.Select(m=>m.Id).ToList();
+            FetchMoviesListToSelect(customer.MoviesListId);
             return View(customer);
             
         }
@@ -101,20 +100,46 @@ namespace TP2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Customer customer,List<int> MoviesId)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,MoviesListId")] Customer customer)
         {
             if (id != customer.Id)
             {
                 return NotFound();
             }
-            Console.WriteLine(MoviesId.ToJson());
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    customer.Movies = await _context.Movies.Where(m=>MoviesId.Contains(m.Id)).ToListAsync();
-                    _context.Update(customer);
-                    await _context.SaveChangesAsync();
+                    // Attach the customer entity
+                    _context.Attach(customer);
+
+                    // Clear existing movies
+                    var existingCustomer = await _context.Customers
+                        .Include(c => c.Movies)
+                        .FirstOrDefaultAsync(c => c.Id == id);
+
+                    if (existingCustomer != null)
+                    {
+                        existingCustomer.Movies.Clear();
+
+                        // Add the selected movies
+                        if (customer.MoviesListId != null)
+                        {
+                            var selectedMovies = await _context.Movies
+                                .Where(m => customer.MoviesListId.Contains(m.Id))
+                                .ToListAsync();
+
+                            foreach (var movie in selectedMovies)
+                            {
+                                existingCustomer.Movies.Add(movie);
+                            }
+                        }
+
+                        // Update the customer
+                        _context.Update(existingCustomer);
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -128,10 +153,9 @@ namespace TP2.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            FetchMoviesListToSelect(customer.Movies?.Select(m=>m.Id).ToList());
+            FetchMoviesListToSelect(customer.MoviesListId);
             return View(customer);
         }
-
         // GET: Customer/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
