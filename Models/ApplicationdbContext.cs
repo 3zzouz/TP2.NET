@@ -12,7 +12,7 @@ public class ApplicationdbContext : DbContext
     public DbSet<Genre> Genres { get; set; }
     public DbSet<Movie>? Movies { get; set; }
     
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    /*protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Customer>()
             .HasMany(c => c.Movies)
@@ -21,5 +21,5 @@ public class ApplicationdbContext : DbContext
         modelBuilder.Entity<BaseClass>()
             .HasIndex(b => b.Name)
             .IsUnique(true);
-    }
+    }*/
 }

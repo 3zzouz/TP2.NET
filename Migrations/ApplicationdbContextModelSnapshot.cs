@@ -22,28 +22,11 @@ namespace TP2.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("CustomerMovie", b =>
-                {
-                    b.Property<int>("CustomersId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("MoviesId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("CustomersId", "MoviesId");
-
-                    b.HasIndex("MoviesId");
-
-                    b.ToTable("CustomerMovie", (string)null);
-                });
-
             modelBuilder.Entity("TP2.Models.Customer", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -69,11 +52,12 @@ namespace TP2.Migrations
 
             modelBuilder.Entity("TP2.Models.Movie", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<Guid?>("CustomerId")
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("GenreId")
                         .HasColumnType("uuid");
@@ -83,28 +67,19 @@ namespace TP2.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CustomerId");
+
                     b.HasIndex("GenreId");
 
                     b.ToTable("Movies");
                 });
 
-            modelBuilder.Entity("CustomerMovie", b =>
-                {
-                    b.HasOne("TP2.Models.Customer", null)
-                        .WithMany()
-                        .HasForeignKey("CustomersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TP2.Models.Movie", null)
-                        .WithMany()
-                        .HasForeignKey("MoviesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("TP2.Models.Movie", b =>
                 {
+                    b.HasOne("TP2.Models.Customer", null)
+                        .WithMany("Movies")
+                        .HasForeignKey("CustomerId");
+
                     b.HasOne("TP2.Models.Genre", "Genre")
                         .WithMany("Movies")
                         .HasForeignKey("GenreId")
@@ -112,6 +87,11 @@ namespace TP2.Migrations
                         .IsRequired();
 
                     b.Navigation("Genre");
+                });
+
+            modelBuilder.Entity("TP2.Models.Customer", b =>
+                {
+                    b.Navigation("Movies");
                 });
 
             modelBuilder.Entity("TP2.Models.Genre", b =>

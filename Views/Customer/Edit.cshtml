@@ -8,26 +8,23 @@
 <h1>Edit</h1>
 
 <h4>Customer</h4>
-<hr/>
+<hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id"/>
+            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control"/>
+                <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MoviesListId" class="control-label"></label>
-                <select asp-for="MoviesListId" class="form-control"
-                        multiple="multiple"
-                        asp-items="ViewBag.Movies">
-                </select>
+                <label asp-for="MoviesListId" class="control-label">Movies</label>
+                <select asp-for="MoviesListId" class="form-control" asp-items="ViewBag.MoviesList" multiple="multiple"></select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary"/>
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -38,5 +35,5 @@
 </div>
 
 @section Scripts {
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

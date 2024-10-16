@@ -26,7 +26,7 @@ namespace TP2.Controllers
         }
 
         // GET: Movie/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
             {
@@ -56,28 +56,21 @@ namespace TP2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,GenreId,Name")] Movie movie)
+        public async Task<IActionResult> Create([Bind("GenreId,Id,Name")] Movie movie)
         {
             if (ModelState.IsValid)
             {
+                movie.Id = Guid.NewGuid();
                 _context.Add(movie);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
-
-            foreach (var state in ModelState)
-            {
-                foreach (var err in state.Value.Errors)
-                {
-                    Console.WriteLine(err.ErrorMessage);
-                }
             }
             ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "Id", movie.GenreId);
             return View(movie);
         }
 
         // GET: Movie/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
@@ -98,7 +91,7 @@ namespace TP2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,GenreId,Name")] Movie movie)
+        public async Task<IActionResult> Edit(Guid id, [Bind("GenreId,Id,Name")] Movie movie)
         {
             if (id != movie.Id)
             {
@@ -130,7 +123,7 @@ namespace TP2.Controllers
         }
 
         // GET: Movie/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
@@ -151,7 +144,7 @@ namespace TP2.Controllers
         // POST: Movie/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var movie = await _context.Movies.FindAsync(id);
             if (movie != null)
@@ -163,7 +156,7 @@ namespace TP2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool MovieExists(int id)
+        private bool MovieExists(Guid id)
         {
             return _context.Movies.Any(e => e.Id == id);
         }
