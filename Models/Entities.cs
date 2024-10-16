@@ -26,15 +26,14 @@ public class Customer:BaseClass
 [Table("Genres")]
 public class Genre:BaseClass
 {
-    
+    [ValidateNever]
     public List<Movie> Movies { get; set; }
-    [NotMapped]
-    public SelectList MoviesList { get; set; }
 }
 
 [Table("Movies")]
 public class Movie:BaseClass
 {
     public Guid GenreId { get; set; }
+    [ValidateNever]
     public Genre Genre { get; set; }
 }
