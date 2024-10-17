@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿/*using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -36,4 +36,4 @@ public class Movie:BaseClass
     public Guid GenreId { get; set; }
     [ValidateNever]
     public Genre Genre { get; set; }
-}
+}*/

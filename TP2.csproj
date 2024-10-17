@@ -71,6 +71,16 @@
       <UpToDateCheckInput Remove="Views\Genre\Details.cshtml" />
       <UpToDateCheckInput Remove="Views\Genre\Edit.cshtml" />
       <UpToDateCheckInput Remove="Views\Genre\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Movie\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Movie\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Movie\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Movie\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Movie\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Customer\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Customer\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Customer\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Customer\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Customer\Index.cshtml" />
     </ItemGroup>
 
 </Project>
